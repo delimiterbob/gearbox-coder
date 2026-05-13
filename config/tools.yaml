@@ -1,0 +1,39 @@
+tools:
+  - name: search_repo
+    description: Search source/ or output/ text using ripgrep.
+    required_args: [query]
+    optional_args: [path]
+
+  - name: read_file
+    description: Read a file from the workspace (source/ or output/).
+    required_args: [path]
+    optional_args: [start_line, end_line]
+
+  - name: write_file
+    description: Write a single complete file to output/. Path must start with output/.
+    required_args: [path, content]
+
+  - name: ask_coder
+    description: >
+      Ask the Phi-4 coding specialist to produce migration output or a fix patch.
+      For migration: returns a // FILE: bundle; harness writes files automatically.
+      For fixes: returns a unified diff; use apply_patch afterwards.
+    required_args: [task, files]
+    optional_args: [constraints, build_output]
+
+  - name: apply_patch
+    description: Apply a unified diff to the workspace. Use to fix build errors after migration.
+    required_args: [patch]
+
+  - name: run_command
+    description: Run an allowlisted build or verification command.
+    required_args: [command]
+    optional_args: [cwd]
+
+  - name: record_evidence
+    description: Record a key observation or decision in the evidence ledger.
+    required_args: [event, details]
+
+  - name: finish
+    description: Signal task completion. Only call after a passing build/verify command.
+    required_args: []

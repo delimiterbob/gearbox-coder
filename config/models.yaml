@@ -1,0 +1,50 @@
+models:
+  controller:
+    name: qwen3-4b-instruct
+    endpoint: http://127.0.0.1:8001/v1
+    temperature: 0.1
+    top_p: 0.8
+    max_tokens: 2048
+    gguf_filename: Qwen3-4B-Q4_K_M.gguf
+    hf_url: https://huggingface.co/bartowski/Qwen3-4B-GGUF/resolve/main/Qwen3-4B-Q4_K_M.gguf
+
+  coder:
+    name: phi-4
+    endpoint: http://127.0.0.1:8002/v1
+    temperature: 0.1
+    top_p: 0.8
+    max_tokens: 4096
+    gguf_filename: phi-4-Q4_K_M.gguf
+    hf_url: https://huggingface.co/bartowski/phi-4-GGUF/resolve/main/phi-4-Q4_K_M.gguf
+
+runtime:
+  max_steps_per_task: 12
+  workspace_root: workspaces
+  evidence_root: runs
+  llama_server_exe: I:\llama-cpp\llama-server.exe
+  gguf_dir: I:\gguf-models
+  controller_port: 8001
+  coder_port: 8002
+  allow_commands:
+    - dotnet build
+    - dotnet test
+    - pytest
+    - npm test
+    - npm run lint
+    - cargo test
+
+# Alternative controller pairings for Phase 5 benchmarking
+alternatives:
+  - id: phi4mini_plus_phi4
+    controller_name: phi-4-mini-instruct
+    controller_gguf: phi-4-mini-instruct-Q4_K_M.gguf
+    controller_hf_url: https://huggingface.co/bartowski/phi-4-mini-instruct-GGUF/resolve/main/phi-4-mini-instruct-Q4_K_M.gguf
+    controller_port: 8001
+    coder_port: 8002
+
+  - id: qwen3_8b_plus_phi4
+    controller_name: qwen3-8b
+    controller_gguf: qwen3-8b-q4_k_m.gguf
+    controller_hf_url: https://huggingface.co/Qwen/Qwen3-8B-GGUF/resolve/main/qwen3-8b-q4_k_m.gguf
+    controller_port: 8001
+    coder_port: 8002

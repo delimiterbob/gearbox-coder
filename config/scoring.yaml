@@ -1,0 +1,72 @@
+weights:
+  task_success_rate: 0.35
+  tool_call_reliability: 0.20
+  patch_quality: 0.20
+  speed: 0.10
+  resource_fit: 0.10
+  evidence_quality: 0.05
+
+grades:
+  A: 90
+  B: 80
+  C: 70
+  D: 60
+  F: 0
+
+criteria:
+  controller:
+    valid_json_rate:
+      description: Percentage of controller responses that parse to valid JSON.
+      weight: 0.25
+    valid_action_rate:
+      description: Percentage of responses using an action from the allowlist.
+      weight: 0.25
+    tool_selection_accuracy:
+      description: Whether the selected action was appropriate for the current state.
+      weight: 0.25
+    unsafe_request_rate:
+      description: Rate of attempts to run unsafe commands or escape the workspace.
+      weight: 0.15
+      invert: true
+    repeated_action_loop_rate:
+      description: Rate of getting stuck repeating the same ineffective action.
+      weight: 0.10
+      invert: true
+
+  coder:
+    patch_validity_rate:
+      description: Whether Phi-4 returns a parseable unified diff.
+      weight: 0.25
+    patch_apply_rate:
+      description: Whether the diff applies cleanly to the workspace.
+      weight: 0.25
+    test_pass_rate:
+      description: Whether the build/test command passes after the patch.
+      weight: 0.30
+    minimality_score:
+      description: How small and targeted the patch is relative to the change needed.
+      weight: 0.10
+    regression_rate:
+      description: Rate of unrelated tests breaking after the patch.
+      weight: 0.10
+      invert: true
+
+  end_to_end:
+    task_success_rate:
+      description: Percentage of tasks where the final verification command passes.
+      weight: 0.40
+    iterations_to_success:
+      description: Average number of controller steps to complete a task.
+      weight: 0.20
+      invert: true
+    wall_clock_time:
+      description: Average seconds per task end-to-end.
+      weight: 0.15
+      invert: true
+    token_usage:
+      description: Average total prompt+completion tokens per task across both models.
+      weight: 0.10
+      invert: true
+    evidence_completeness:
+      description: Whether a full JSONL trace was captured for every step.
+      weight: 0.15

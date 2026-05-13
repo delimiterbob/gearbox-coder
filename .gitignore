@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Runtime output (not committed — generated per run)
+workspaces/
+runs/
+
+# Repos populated by setup_repos.ps1 (read from MTS, not stored in git)
+repos/
+
+# Logs and lock files
+*.log
+*.lock
+run-local-models.lock

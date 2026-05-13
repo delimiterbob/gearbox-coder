@@ -1,0 +1,84 @@
+# Gearbox Benchmark Task Matrix
+# The harness expands this into individual task objects at runtime.
+
+# ── TARGET STACK DEFINITIONS ──────────────────────────────────────────────────
+targets:
+  BZ:
+    name: "C# Blazor Server .NET 10"
+    prompt_file: prompts/migrate-to-blazor.md
+    verify_command: dotnet build output
+    verify_cwd: null
+    success: "dotnet build exits with code 0."
+
+  WF:
+    name: "C# WinForms .NET 10"
+    prompt_file: prompts/migrate-to-winforms.md
+    verify_command: dotnet build output
+    verify_cwd: null
+    success: "dotnet build exits with code 0."
+
+  NG:
+    name: "C# .NET 10 + Angular"
+    prompt_file: prompts/migrate-to-angular.md
+    verify_command: npm run build
+    verify_cwd: output/ClientApp
+    success: "npm run build exits with code 0."
+
+# ── SOURCE LANGUAGES AND AVAILABLE TEST IDS ───────────────────────────────────
+sources:
+  - lang: CSharp-WinForms
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: VB.NET
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: VB6
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: Delphi
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: PowerBuilder
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: Legacy-Java
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: Silverlight
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: FoxPro
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: Clarion
+    tests: [T1-Calculator, T2-LoginDialog]
+  - lang: ASP-Classic
+    tests: [T2-LoginDialog]
+  - lang: ASP-WebForms
+    tests: [T2-LoginDialog]
+  - lang: Informix-4GL
+    tests: [T2-LoginDialog]
+  - lang: COBOL
+    tests: [T1-Calculator]
+
+# ── PHASE DEFINITIONS ─────────────────────────────────────────────────────────
+# Phase smoke: 5 tasks — T1 from 5 representative languages, BZ target only.
+#              Gate: avg weighted_score >= 15 to proceed.
+# Phase breadth: T1+T2 from all languages, BZ and WF targets.
+# Phase full: entire matrix (all languages × all tests × all targets).
+
+phases:
+  smoke:
+    description: "5 tasks: T1 from 5 representative languages, BZ target only."
+    gate_min_avg_score: 15
+    tasks:
+      - {lang: VB6,            test: T1-Calculator, target: BZ}
+      - {lang: CSharp-WinForms,test: T1-Calculator, target: BZ}
+      - {lang: Legacy-Java,    test: T1-Calculator, target: BZ}
+      - {lang: Delphi,         test: T1-Calculator, target: BZ}
+      - {lang: COBOL,          test: T1-Calculator, target: BZ}
+
+  breadth:
+    description: "All available T1+T2 tasks, BZ and WF targets only."
+    # Harness generates tasks from sources × [BZ, WF] at runtime
+
+  full:
+    description: "All available T1+T2 tasks across all three targets."
+    # Harness generates tasks from sources × [BZ, WF, NG] at runtime
+
+# ── BASELINE MODES ────────────────────────────────────────────────────────────
+# Run with --baseline phi4-alone: Phi-4 acts as both controller and coder.
+# Run with --baseline controller-alone: Controller model handles everything.
+# Both use the same task matrix; only the model routing changes.
